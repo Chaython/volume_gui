@@ -1,7 +1,12 @@
 import sys
 import subprocess
+import tkinter as tk
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 def install_packages():
+    """Installs required packages if they are not already installed."""
     required = {'comtypes', 'pycaw'}
     installed = set()
     for package in required:
@@ -16,12 +21,8 @@ def install_packages():
 
 install_packages()
 
-import tkinter as tk
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-
 def set_volume(level):
+    """Sets the system's master volume to the specified level."""
     devices = AudioUtilities.GetSpeakers()
     interface = devices.Activate(
         IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
@@ -32,6 +33,7 @@ def set_volume(level):
     volume.SetMasterVolumeLevelScalar(normalized_level, None)
 
 def update_volume(value):
+    """Updates the volume label and sets the volume when the slider changes."""
     desired_volume = int(value)
     label.config(text=f"Volume: {desired_volume}%")
     set_volume(desired_volume)
