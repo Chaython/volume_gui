@@ -1,3 +1,21 @@
+import sys
+import subprocess
+
+def install_packages():
+    required = {'comtypes', 'pycaw'}
+    installed = set()
+    for package in required:
+        try:
+            __import__(package)
+            installed.add(package)
+        except ImportError:
+            pass
+    missing = required - installed
+    if missing:
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing])
+
+install_packages()
+
 import tkinter as tk
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
